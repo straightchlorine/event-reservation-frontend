@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8080/api",
 });
 
 export const login = async (credentials) => {
@@ -56,8 +56,10 @@ export const getReservationById = async (id) => {
   return response.data;
 };
 
-export const createReservation = async (reservationData) => {
-  const response = await API.put("/reservations", reservationData);
+export const createReservation = async (reservationData, token) => {
+  const response = await API.put("/reservations", reservationData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 

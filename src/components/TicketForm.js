@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { createReservation } from "../api";
 import "../styles/TicketForm.css";
 
 const TicketForm = () => {
@@ -26,23 +27,13 @@ const TicketForm = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:8080/api/reservations", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const data = await createReservation(
+        {
           event_id: eventId,
           tickets: [{ type: ticketType.toUpperCase() }],
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create reservation");
-      }
-
-      const data = await response.json();
+        },
+        token
+      );
       alert(
         `Successfully purchased a ${ticketType} ticket for ${eventName}! Reservation ID: ${data.id}`
       );
